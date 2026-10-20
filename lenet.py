@@ -1,6 +1,4 @@
-# ============================================================
-# prever.py — Classificador de imagem única com LeNet5Improved
-# ============================================================
+
 import argparse
 import sys
 from pathlib import Path
@@ -14,9 +12,6 @@ import torch.nn.functional as F
 from PIL import Image
 from torchvision import transforms
 
-# ------------------------------------------------------------
-# 1. Arquitetura (cópia EXATA do treino)
-# ------------------------------------------------------------
 class LeNet5Improved(nn.Module):
     def __init__(self, num_classes=10):
         super().__init__()
@@ -47,24 +42,18 @@ class LeNet5Improved(nn.Module):
         return self.fc3(x)
 
 
-# ------------------------------------------------------------
-# 2. Configuração (classes e transformação de inferência)
-# ------------------------------------------------------------
+
 CLASSES = ['avião', 'automóvel', 'pássaro', 'gato', 'cervo',
            'cachorro', 'sapo', 'cavalo', 'navio', 'caminhão']
 
 TRANSFORM_INFER = transforms.Compose([
-    transforms.Resize(36),         # menor lado vira 36
-    transforms.CenterCrop(32),     # recorta o centro 32x32 (mantém proporção)
+    transforms.Resize(36),        
+    transforms.CenterCrop(32),     
     transforms.ToTensor(),
     transforms.Normalize((0.4914, 0.4822, 0.4465),
                          (0.2470, 0.2435, 0.2616)),
 ])
 
-
-# ------------------------------------------------------------
-# 3. Carregar modelo
-# ------------------------------------------------------------
 def carregar_modelo(caminho_pesos: str, device):
     model = LeNet5Improved(num_classes=10).to(device)
     state = torch.load(caminho_pesos, map_location=device)
@@ -73,9 +62,7 @@ def carregar_modelo(caminho_pesos: str, device):
     return model
 
 
-# ------------------------------------------------------------
-# 4. Inferência em uma imagem
-# ------------------------------------------------------------
+
 @torch.no_grad()
 def prever(model, imagem: Image.Image, device, top_k: int = 3):
     """Recebe uma PIL.Image e retorna lista [(classe, prob), ...]."""
@@ -87,9 +74,7 @@ def prever(model, imagem: Image.Image, device, top_k: int = 3):
             for prob, idx in zip(top.values, top.indices)]
 
 
-# ------------------------------------------------------------
-# 5. CLI
-# ------------------------------------------------------------
+
 def main_gui():
     
 
